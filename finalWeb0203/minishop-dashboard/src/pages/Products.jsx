@@ -1,4 +1,5 @@
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 import { useStoreProducts } from '../hooks/useStoreProducts'
 import ProductCard from '../components/ProductCard'
 import SearchFilterBar from '../components/SearchFilterBar'
@@ -51,6 +52,12 @@ export default function Products() {
       <div className="text-center">
         <h1 className="text-4xl font-normal tracking-tight sm:text-5xl">All Products</h1>
         <p className="mt-3 text-base-content/60">สินค้าทั้งหมดจาก Fake Store API</p>
+        <p className="mt-2 text-sm text-base-content/60">
+          ต้องการดูสต็อก เพิ่ม หรือลบสินค้า?{' '}
+          <Link to="/admin/products" className="inline-flex items-center gap-1 text-primary hover:underline">
+            ไปที่ Admin → Products <ArrowRight className="size-3.5" strokeWidth={1.8} />
+          </Link>
+        </p>
       </div>
 
       <SearchFilterBar

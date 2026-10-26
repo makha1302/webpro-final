@@ -30,9 +30,20 @@ npm run dev      # เปิด http://localhost:5173
 | `/cart` | Shopping Cart: ปรับจำนวน ลบสินค้า สรุปราคา Checkout | React Context + localStorage |
 | `/profile` | Profile: ฟอร์มแก้ไขโปรไฟล์ เปลี่ยนรูป ประวัติคำสั่งซื้อ | localStorage |
 | `/about` | ข้อมูลเกี่ยวกับแอปพลิเคชัน | — |
-| `/admin` | Admin Dashboard: สรุปสินค้า กราฟยอดขาย คำสั่งซื้อล่าสุด | Mock Data |
+| `/login` | เข้าสู่ระบบ (มีบัญชีตัวอย่าง) | localStorage (Mock) |
+| `/register` | สมัครสมาชิก | localStorage (Mock) |
+| `/admin` | MiniShop Dashboard: สรุปสินค้า ข้อมูลสดจาก API กราฟยอดขาย คำสั่งซื้อล่าสุด | Mock Data + Fake Store API |
 | `/admin/products` | จัดการสินค้า: สรุป เพิ่ม ค้นหา กรอง ลบ | Mock Data (ข้อ 2.1) |
 | `*` | 404 Not Found | — |
+
+## ระบบผู้ใช้ (Mock)
+
+ไม่บังคับเข้าสู่ระบบ ทุกหน้าใช้งานได้ตามปกติ กด **Log in** มุมขวาบนเพื่อเข้าสู่ระบบ
+
+- บัญชีตัวอย่าง: **demo@minishop.com / 123456** (หรือกด "ใช้บัญชีตัวอย่าง" ในหน้า Login)
+- สมัครสมาชิกใหม่ได้ที่ `/register` ข้อมูลเก็บใน localStorage
+- เข้าสู่ระบบแล้ว หน้า Profile จะแสดงชื่อ/อีเมลของบัญชี และมีปุ่ม Log out
+- โค้ด: `src/context/AuthProvider.jsx`, `src/pages/Login.jsx`, `src/pages/Register.jsx`
 
 ## ตำแหน่งโค้ดตามข้อสอบ
 
@@ -46,7 +57,7 @@ npm run dev      # เปิด http://localhost:5173
 | 3.1 | ค้นหาด้วยชื่อ: `useState` + `onChange` + `filter()` + `toLowerCase()` | `src/pages/admin/ManageProducts.jsx`, `src/components/SearchFilterBar.jsx` |
 | 3.2 | Dropdown: All Categories / Accessories / Display / Camera ทำงานร่วมกับการค้นหา | `src/components/SearchFilterBar.jsx` |
 | 3.3 | ฟอร์มเพิ่มสินค้า (Name, Category, Price, Stock) + ตรวจชื่อว่าง ราคา > 0 จำนวนเป็นจำนวนเต็ม ≥ 0 | `src/components/AddProductForm.jsx` |
-| 4.1 | ดึงข้อมูล Fake Store API: `useEffect` + `fetch()` + `async/await` + `useState` | `src/services/productApi.js`, `src/hooks/useStoreProducts.js` |
+| 4.1 | ดึงข้อมูล Fake Store API: `useEffect` + `fetch()` + `async/await` + `useState` และแสดงข้อมูลสดในหน้า Admin Dashboard | `src/services/productApi.js`, `src/hooks/useStoreProducts.js`, `src/components/ApiStats.jsx` |
 | 4.2 | Loading products... / Error (แสดงข้อความ + ปุ่ม Retry + ใช้ Mock Data แทน) / Success | `src/hooks/useStoreProducts.js`, `src/components/StatusMessage.jsx` |
 | 4.3 | ปุ่ม Delete (มี Modal ยืนยัน) ลบผ่าน React State ข้อมูลสรุปอัปเดตทันที | `src/context/InventoryProvider.jsx`, `src/pages/admin/ManageProducts.jsx` |
 | 5.1 | React Router: `/`, `/products`, `/about` และหน้าอื่น ๆ ใช้ `NavLink` / `Link` | `src/App.jsx`, `src/main.jsx` |
@@ -88,5 +99,8 @@ src/
 | Add to Cart, ปรับจำนวน, Checkout | ✅ ยอดรวมถูกต้อง คำสั่งซื้อไปแสดงใน Profile |
 | `/products/999` | ✅ Product not found |
 | API ล่ม | ✅ แสดงข้อความแจ้งเตือน + ปุ่ม Retry + ใช้ Mock Data |
+| Login ด้วยบัญชีตัวอย่าง / รหัสผิด / ช่องว่าง | ✅ เข้าสู่ระบบได้ / แจ้ง "อีเมลหรือรหัสผ่านไม่ถูกต้อง" / แจ้งให้กรอก |
+| สมัครสมาชิก: ช่องว่าง, อีเมลซ้ำ, รหัสไม่ตรงกัน, สมัครสำเร็จ | ✅ แจ้ง error ทุกกรณี / สมัครแล้วเข้า Profile ด้วยชื่อใหม่ |
+| Log out | ✅ กลับเป็นโปรไฟล์ตัวอย่าง ปุ่ม Log in กลับมา |
 | สลับ Dark Mode แล้ว Refresh | ✅ ยังเป็น Dark |
 | จอ 375 / 768 / 1366 px | ✅ ไม่ล้นจอ |

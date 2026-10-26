@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Menu, Search, ShoppingBag, User, X } from 'lucide-react'
+import { LogIn, LogOut, Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { useCart } from '../context/cartContext'
+import { useAuth } from '../context/authContext'
 import ThemeToggle from './ThemeToggle'
 import Logo from './Logo'
 
@@ -14,6 +15,7 @@ const links = [
 
 export default function Header() {
   const { cartCount } = useCart()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [keyword, setKeyword] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -81,9 +83,21 @@ export default function Header() {
             )}
           </Link>
 
-          <Link to="/profile" className="btn btn-ghost btn-sm btn-circle" aria-label="Profile">
-            <User className="size-[18px]" strokeWidth={1.8} />
+          <Link to="/profile" className="btn btn-ghost btn-sm btn-circle" aria-label="Profile" title={user ? user.name : 'Profile'}>
+            {user ? (
+              <span className="grid size-7 place-items-center rounded-full bg-primary text-xs font-medium text-primary-content">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+            ) : (
+              <User className="size-[18px]" strokeWidth={1.8} />
+            )}
           </Link>
+
+          {!user && (
+            <Link to="/login" className="btn btn-primary btn-sm ml-1 hidden rounded-full px-4 font-normal sm:inline-flex">
+              Log in
+            </Link>
+          )}
 
           <button
             type="button"
@@ -112,6 +126,19 @@ export default function Header() {
                 {link.label}
               </NavLink>
             ))}
+            {user ? (
+              <button
+                type="button"
+                className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-left hover:bg-base-200"
+                onClick={() => { logout(); setMenuOpen(false) }}
+              >
+                <LogOut className="size-4" strokeWidth={1.8} /> Log out ({user.name})
+              </button>
+            ) : (
+              <NavLink to="/login" className={mobileLinkClass} onClick={() => setMenuOpen(false)}>
+                <span className="flex items-center gap-2"><LogIn className="size-4" strokeWidth={1.8} /> Log in</span>
+              </NavLink>
+            )}
           </nav>
           {searchForm}
         </div>

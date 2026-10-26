@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { Camera, CircleCheck, Package, UserRound } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Camera, CircleCheck, LogIn, LogOut, Package, UserRound } from 'lucide-react'
 import { useCart } from '../context/cartContext'
+import { useAuth } from '../context/authContext'
 import { sampleOrders, orderStatusClass } from '../data/dashboardData'
 import { loadJSON, saveJSON } from '../utils/storage'
 import { formatUSD } from '../utils/format'
@@ -21,9 +23,20 @@ function validate(form) {
   return errors
 }
 
+// เข้าสู่ระบบแล้ว: ใช้ชื่อ/อีเมลจากบัญชี และแยกเก็บโปรไฟล์ตามบัญชี
+// ยังไม่เข้าสู่ระบบ: แสดงโปรไฟล์ตัวอย่างเดิม
 export default function Profile() {
+  const { user, logout } = useAuth()
+  return <ProfileView key={user?.email ?? 'guest'} user={user} onLogout={logout} />
+}
+
+function ProfileView({ user, onLogout }) {
   const { orders } = useCart()
-  const [profile, setProfile] = useState(() => loadJSON('minishop-profile', defaultProfile))
+  const storageKey = user ? `minishop-profile:${user.email}` : 'minishop-profile'
+  const initialProfile = user
+    ? { ...defaultProfile, name: user.name, email: user.email, phone: '', bio: '' }
+    : defaultProfile
+  const [profile, setProfile] = useState(() => loadJSON(storageKey, initialProfile))
   const [form, setForm] = useState(profile)
   const [errors, setErrors] = useState({})
   const [saved, setSaved] = useState(false)
@@ -59,7 +72,7 @@ export default function Profile() {
     const next = { ...form, name: form.name.trim(), email: form.email.trim() }
     setProfile(next)
     setForm(next)
-    saveJSON('minishop-profile', next)
+    saveJSON(storageKey, next)
     setSaved(true)
   }
 
@@ -83,6 +96,21 @@ export default function Profile() {
           <li><a href="#profile-info" className="menu-active"><UserRound className="size-4" strokeWidth={1.7} /> Profile</a></li>
           <li><a href="#orders"><Package className="size-4" strokeWidth={1.7} /> Orders</a></li>
         </ul>
+
+        <div className="mt-4 border-t border-base-300 pt-4">
+          {user ? (
+            <button type="button" onClick={onLogout} className="btn btn-ghost btn-sm w-full justify-start font-normal text-base-content/70">
+              <LogOut className="size-4" strokeWidth={1.7} /> Log out
+            </button>
+          ) : (
+            <>
+              <p className="mb-2 text-xs text-base-content/60">ยังไม่ได้เข้าสู่ระบบ (แสดงข้อมูลตัวอย่าง)</p>
+              <Link to="/login" className="btn btn-primary btn-sm w-full rounded-full font-normal">
+                <LogIn className="size-4" strokeWidth={1.7} /> Log in
+              </Link>
+            </>
+          )}
+        </div>
       </aside>
 
       <div className="min-w-0 space-y-6">

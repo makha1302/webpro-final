@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useInventory } from '../../context/inventoryContext'
 import { useCart } from '../../context/cartContext'
 import SummaryCards from '../../components/SummaryCards'
+import ApiStats from '../../components/ApiStats'
 import SalesChart from '../../components/SalesChart'
 import StockBadge from '../../components/StockBadge'
 import { weeklySales, sampleOrders, orderStatusClass } from '../../data/dashboardData'
@@ -27,7 +28,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-normal tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-normal tracking-tight">MiniShop Dashboard</h1>
           <p className="mt-1 text-base-content/60">ภาพรวมสินค้าและยอดขายของ MiniShop</p>
         </div>
         <p className="text-sm text-base-content/50">Today, {today}</p>
@@ -35,6 +36,9 @@ export default function Dashboard() {
 
       {/* ส่วนสรุปข้อมูลด้านบน (ข้อ 2.3) */}
       <SummaryCards products={products} />
+
+      {/* ข้อมูลจริงจาก Fake Store API */}
+      <ApiStats />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_1fr]">
         <section className="card min-w-0 rounded-2xl border border-base-300/60 bg-base-100">
