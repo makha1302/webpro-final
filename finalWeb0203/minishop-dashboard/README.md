@@ -3,9 +3,11 @@
 ข้อสอบปฏิบัติปลายภาค รายวิชา Web Programming · Makha (67050203)
 
 เว็บแอปพลิเคชันสำหรับแสดงรายการสินค้า เพิ่มสินค้า ค้นหา และจัดการข้อมูลสินค้า
-พัฒนาด้วย **React 19 + Vite + Tailwind CSS v4 + DaisyUI 5 + React Router v6**
+พัฒนาด้วย **React 19 + Vite 6 + Tailwind CSS v4 + DaisyUI 5 + React Router v6**
 
 ## วิธีรัน
+
+ต้องใช้ Node.js 18 ขึ้นไป (ทดสอบแล้วบน Node 20.11.1 และ 22)
 
 ```bash
 cd finalWeb0203/minishop-dashboard
