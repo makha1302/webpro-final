@@ -1,0 +1,157 @@
+import { useState } from 'react'
+import { useCart } from '../context/cartContext'
+import { sampleOrders, orderStatusClass } from '../data/dashboardData'
+import { loadJSON, saveJSON } from '../utils/storage'
+import { formatUSD } from '../utils/format'
+
+const defaultProfile = {
+  name: 'Makha',
+  email: 'makha@example.com',
+  phone: '081-234-5678',
+  bio: 'Computer Science student | Web Programming',
+  photo: ''
+}
+
+function validate(form) {
+  const errors = {}
+  if (!form.name.trim()) errors.name = 'กรุณากรอกชื่อ'
+  if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) errors.email = 'รูปแบบอีเมลไม่ถูกต้อง'
+  if (form.phone && !/^[0-9+\-\s]{9,15}$/.test(form.phone.trim())) errors.phone = 'เบอร์โทรไม่ถูกต้อง'
+  return errors
+}
+
+export default function Profile() {
+  const { orders } = useCart()
+  const [profile, setProfile] = useState(() => loadJSON('minishop-profile', defaultProfile))
+  const [form, setForm] = useState(profile)
+  const [errors, setErrors] = useState({})
+  const [saved, setSaved] = useState(false)
+
+  // คำสั่งซื้อจริงจากหน้า Cart + ตัวอย่างคำสั่งซื้อเดิม
+  const recentOrders = [...orders, ...sampleOrders].slice(0, 5)
+
+  function handleChange(event) {
+    const { name, value } = event.target
+    setForm(current => ({ ...current, [name]: value }))
+    setErrors(current => ({ ...current, [name]: undefined }))
+    setSaved(false)
+  }
+
+  function handlePhotoChange(event) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      setForm(current => ({ ...current, photo: reader.result }))
+      setSaved(false)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault()
+    const formErrors = validate(form)
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors)
+      return
+    }
+    const next = { ...form, name: form.name.trim(), email: form.email.trim() }
+    setProfile(next)
+    setForm(next)
+    saveJSON('minishop-profile', next)
+    setSaved(true)
+  }
+
+  const avatar = (src, size) =>
+    src ? (
+      <img src={src} alt="Profile" className={`${size} rounded-full object-cover`} />
+    ) : (
+      <span className={`${size} grid place-items-center rounded-full bg-primary/10 text-3xl text-primary`} aria-hidden="true">
+        {profile.name.charAt(0).toUpperCase() || '👤'}
+      </span>
+    )
+
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
+      <aside className="h-fit rounded-2xl bg-base-100 p-5 text-center shadow-sm">
+        <div className="mx-auto w-fit">{avatar(profile.photo, 'size-20')}</div>
+        <p className="mt-3 font-bold">{profile.name}</p>
+        <p className="text-sm opacity-60">{profile.email}</p>
+
+        <ul className="menu mt-4 w-full p-0 text-left">
+          <li><a href="#profile-info" className="menu-active">👤 Profile</a></li>
+          <li><a href="#orders">📦 Orders</a></li>
+        </ul>
+      </aside>
+
+      <div className="min-w-0 space-y-6">
+        <section id="profile-info" className="rounded-2xl bg-base-100 p-5 shadow-sm md:p-6">
+          <h1 className="text-2xl font-bold">Profile Information</h1>
+
+          <form onSubmit={handleSubmit} noValidate className="mt-5 grid gap-6 md:grid-cols-[1fr_180px]">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="mb-1 block text-sm font-medium">Full Name</label>
+                <input id="name" name="name" value={form.name} onChange={handleChange} className={`input w-full ${errors.name ? 'input-error' : ''}`} />
+                {errors.name && <p className="mt-1 text-xs text-error">{errors.name}</p>}
+              </div>
+              <div>
+                <label htmlFor="email" className="mb-1 block text-sm font-medium">Email Address</label>
+                <input id="email" name="email" type="email" value={form.email} onChange={handleChange} className={`input w-full ${errors.email ? 'input-error' : ''}`} />
+                {errors.email && <p className="mt-1 text-xs text-error">{errors.email}</p>}
+              </div>
+              <div>
+                <label htmlFor="phone" className="mb-1 block text-sm font-medium">Phone Number</label>
+                <input id="phone" name="phone" value={form.phone} onChange={handleChange} className={`input w-full ${errors.phone ? 'input-error' : ''}`} />
+                {errors.phone && <p className="mt-1 text-xs text-error">{errors.phone}</p>}
+              </div>
+              <div>
+                <label htmlFor="bio" className="mb-1 block text-sm font-medium">Bio</label>
+                <textarea id="bio" name="bio" rows="3" value={form.bio} onChange={handleChange} className="textarea w-full" />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <button type="submit" className="btn btn-primary">Save Changes</button>
+                {saved && <span role="status" className="text-sm text-success">✅ บันทึกข้อมูลแล้ว</span>}
+              </div>
+            </div>
+
+            <div className="order-first flex flex-col items-center gap-3 md:order-none">
+              {avatar(form.photo, 'size-28')}
+              <label className="btn btn-outline btn-primary btn-sm">
+                Change Photo
+                <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+              </label>
+            </div>
+          </form>
+        </section>
+
+        <section id="orders" className="rounded-2xl bg-base-100 p-5 shadow-sm md:p-6">
+          <h2 className="text-xl font-bold">Recent Orders</h2>
+          <div className="mt-4 overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentOrders.map(order => (
+                  <tr key={order.id} className="hover:bg-base-200">
+                    <td className="font-medium text-primary">{order.id}</td>
+                    <td>{order.date}</td>
+                    <td>{formatUSD(order.total)}</td>
+                    <td><span className={`badge badge-sm ${orderStatusClass[order.status]}`}>{order.status}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}

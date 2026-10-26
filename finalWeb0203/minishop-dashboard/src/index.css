@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+/* ปรับสีหลักของ Theme light / dark ให้เป็นโทนม่วงคราม (Indigo) ตาม Mockup */
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: oklch(51% 0.23 277);
+  --color-primary-content: oklch(98% 0.01 277);
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  prefersdark: true;
+  --color-primary: oklch(65% 0.2 277);
+  --color-primary-content: oklch(98% 0.01 277);
+}
+
+/* Animation สำหรับเปลี่ยนหน้าและแสดงการ์ด */
+@theme {
+  --animate-fade-up: fade-up 0.4s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+}
