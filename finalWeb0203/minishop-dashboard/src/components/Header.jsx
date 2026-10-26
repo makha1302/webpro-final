@@ -84,7 +84,9 @@ export default function Header() {
           </Link>
 
           <Link to="/profile" className="btn btn-ghost btn-sm btn-circle" aria-label="Profile" title={user ? user.name : 'Profile'}>
-            {user ? (
+            {user?.photo ? (
+              <img src={user.photo} alt="" className="size-7 rounded-full object-cover" />
+            ) : user ? (
               <span className="grid size-7 place-items-center rounded-full bg-primary text-xs font-medium text-primary-content">
                 {user.name.charAt(0).toUpperCase()}
               </span>

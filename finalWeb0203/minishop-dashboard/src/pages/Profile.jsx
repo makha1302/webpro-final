@@ -26,11 +26,28 @@ function validate(form) {
 // เข้าสู่ระบบแล้ว: ใช้ชื่อ/อีเมลจากบัญชี และแยกเก็บโปรไฟล์ตามบัญชี
 // ยังไม่เข้าสู่ระบบ: แสดงโปรไฟล์ตัวอย่างเดิม
 export default function Profile() {
-  const { user, logout } = useAuth()
-  return <ProfileView key={user?.email ?? 'guest'} user={user} onLogout={logout} />
+  const { user, logout, updateAccount } = useAuth()
+  return <ProfileView key={user?.email ?? 'guest'} user={user} onLogout={logout} onUpdateAccount={updateAccount} />
 }
 
-function ProfileView({ user, onLogout }) {
+// ย่อรูปให้ด้านยาวไม่เกิน 256px ก่อนเก็บ เพราะ localStorage มีพื้นที่จำกัด
+function resizeImage(dataUrl, maxSize = 256) {
+  return new Promise(resolve => {
+    const img = new Image()
+    img.onload = () => {
+      const scale = Math.min(1, maxSize / Math.max(img.width, img.height))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.round(img.width * scale)
+      canvas.height = Math.round(img.height * scale)
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
+      resolve(canvas.toDataURL('image/jpeg', 0.85))
+    }
+    img.onerror = () => resolve(dataUrl)
+    img.src = dataUrl
+  })
+}
+
+function ProfileView({ user, onLogout, onUpdateAccount }) {
   const { orders } = useCart()
   const storageKey = user ? `minishop-profile:${user.email}` : 'minishop-profile'
   const initialProfile = user
@@ -55,8 +72,9 @@ function ProfileView({ user, onLogout }) {
     const file = event.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = () => {
-      setForm(current => ({ ...current, photo: reader.result }))
+    reader.onload = async () => {
+      const photo = await resizeImage(reader.result)
+      setForm(current => ({ ...current, photo }))
       setSaved(false)
     }
     reader.readAsDataURL(file)
@@ -73,6 +91,8 @@ function ProfileView({ user, onLogout }) {
     setProfile(next)
     setForm(next)
     saveJSON(storageKey, next)
+    // เข้าสู่ระบบอยู่: อัปเดตชื่อและรูปของบัญชีด้วย ให้ Header แสดงตาม
+    if (user) onUpdateAccount({ name: next.name, photo: next.photo })
     setSaved(true)
   }
 

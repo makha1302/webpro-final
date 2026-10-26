@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
   }, [sessionEmail])
 
   const account = users.find(user => user.email === sessionEmail)
-  const user = account ? { name: account.name, email: account.email } : null
+  const user = account ? { name: account.name, email: account.email, photo: account.photo || '' } : null
 
   function register({ name, email, password }) {
     const normalizedEmail = email.trim().toLowerCase()
@@ -46,8 +46,15 @@ export default function AuthProvider({ children }) {
     setSessionEmail(null)
   }
 
+  // อัปเดตชื่อ/รูปของบัญชีที่เข้าสู่ระบบอยู่ (เรียกจากหน้า Profile ตอนกด Save Changes)
+  function updateAccount(changes) {
+    setUsers(current =>
+      current.map(item => (item.email === sessionEmail ? { ...item, ...changes } : item))
+    )
+  }
+
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, register, login, logout, updateAccount }}>
       {children}
     </AuthContext.Provider>
   )
