@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getProducts } from '../services/productApi'
-import { mockProducts, categoryIcons } from '../data/mockProducts'
+import { mockProducts } from '../data/mockProducts'
 
 // ถ้าเรียก API ไม่ได้ ใช้ Mock Data ข้อ 2.1 แทน โดยแปลงให้มีรูปแบบเดียวกับ Fake Store API
 const fallbackProducts = mockProducts.map(product => ({
@@ -10,7 +10,6 @@ const fallbackProducts = mockProducts.map(product => ({
   description: `${product.name} — สินค้าจากข้อมูลจำลองของ MiniShop`,
   category: product.category.toLowerCase(),
   image: '',
-  icon: categoryIcons[product.category],
   rating: { rate: 4.5, count: 10 }
 }))
 

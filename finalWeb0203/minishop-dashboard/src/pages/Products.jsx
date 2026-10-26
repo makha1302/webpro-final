@@ -5,14 +5,28 @@ import SearchFilterBar from '../components/SearchFilterBar'
 import { LoadingState, ErrorAlert, EmptyState } from '../components/StatusMessage'
 import { capitalize } from '../utils/format'
 
-// หน้าแสดงสินค้าทั้งหมดจาก Fake Store API พร้อมค้นหาและกรองหมวดหมู่
+const sortOptions = [
+  { value: 'recommended', label: 'Recommended' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'rating', label: 'Top Rated' }
+]
+
+const sorters = {
+  'price-asc': (a, b) => a.price - b.price,
+  'price-desc': (a, b) => b.price - a.price,
+  rating: (a, b) => b.rating.rate - a.rating.rate
+}
+
+// หน้าแสดงสินค้าทั้งหมดจาก Fake Store API พร้อมค้นหา กรองหมวดหมู่ และเรียงลำดับ
 export default function Products() {
   const { products, loading, error, reload } = useStoreProducts()
 
-  // เก็บคำค้นหาและหมวดหมู่ไว้ใน URL (?q=...&category=...) เพื่อให้ช่องค้นหาใน Header ใช้งานร่วมกันได้
+  // เก็บคำค้นหา/หมวดหมู่/การเรียงไว้ใน URL เพื่อให้ช่องค้นหาใน Header ใช้งานร่วมกันได้
   const [searchParams, setSearchParams] = useSearchParams()
   const search = searchParams.get('q') ?? ''
   const category = searchParams.get('category') ?? 'all'
+  const sort = searchParams.get('sort') ?? 'recommended'
 
   function updateParam(key, value, emptyValue) {
     const next = new URLSearchParams(searchParams)
@@ -30,24 +44,26 @@ export default function Products() {
     const matchCategory = category === 'all' || product.category === category
     return matchName && matchCategory
   })
+  const sorted = sorters[sort] ? [...filtered].sort(sorters[sort]) : filtered
 
   return (
-    <section className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Products</h1>
-        <p className="mt-1 opacity-70">สินค้าทั้งหมดจาก Fake Store API</p>
+    <section className="space-y-8">
+      <div className="text-center">
+        <h1 className="text-4xl font-normal tracking-tight sm:text-5xl">All Products</h1>
+        <p className="mt-3 text-base-content/60">สินค้าทั้งหมดจาก Fake Store API</p>
       </div>
 
-      <div className="rounded-box bg-base-100 p-4 shadow-sm">
-        <SearchFilterBar
-          search={search}
-          onSearchChange={value => updateParam('q', value, '')}
-          category={category}
-          onCategoryChange={value => updateParam('category', value, 'all')}
-          categories={categories}
-          formatCategory={capitalize}
-        />
-      </div>
+      <SearchFilterBar
+        search={search}
+        onSearchChange={value => updateParam('q', value, '')}
+        category={category}
+        onCategoryChange={value => updateParam('category', value, 'all')}
+        categories={categories}
+        formatCategory={capitalize}
+        sort={sort}
+        onSortChange={value => updateParam('sort', value, 'recommended')}
+        sortOptions={sortOptions}
+      />
 
       {loading ? (
         <LoadingState />
@@ -55,19 +71,19 @@ export default function Products() {
         <>
           {error && <ErrorAlert message={error} onRetry={reload} />}
 
-          <p className="text-sm opacity-70">
-            Showing {filtered.length} of {products.length} products
+          <p className="text-sm text-base-content/60">
+            We have found <span className="font-medium text-base-content">{sorted.length}</span> of {products.length} items
           </p>
 
-          {filtered.length === 0 ? (
+          {sorted.length === 0 ? (
             <EmptyState description={search ? `ไม่มีสินค้าที่ชื่อตรงกับ "${search}"` : 'ไม่มีสินค้าในหมวดหมู่นี้'}>
-              <button type="button" className="btn btn-primary btn-sm mt-2" onClick={() => setSearchParams({})}>
+              <button type="button" className="btn btn-primary btn-sm mt-3 rounded-full px-5 font-normal" onClick={() => setSearchParams({})}>
                 Clear filters
               </button>
             </EmptyState>
           ) : (
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {filtered.map(product => (
+              {sorted.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

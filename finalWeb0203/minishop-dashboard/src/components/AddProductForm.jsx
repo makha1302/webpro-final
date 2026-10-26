@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CircleCheck, Plus } from 'lucide-react'
 import { inventoryCategories } from '../data/mockProducts'
 
 const emptyForm = {
@@ -65,13 +66,16 @@ export default function AddProductForm({ onAdd }) {
   const fieldClass = hasError => (hasError ? 'input-error' : '')
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="card bg-base-100 shadow-sm">
-      <div className="card-body gap-4">
-        <h2 className="card-title">➕ Add New Product</h2>
+    <form onSubmit={handleSubmit} noValidate className="rounded-2xl border border-base-300/60 bg-base-100 p-5 md:p-6">
+      <div className="flex flex-col gap-5">
+        <div>
+          <h2 className="text-lg font-medium">Add New Product</h2>
+          <p className="text-sm text-base-content/60">กรอกข้อมูลให้ครบ แล้วกด Add Product</p>
+        </div>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div>
-            <label htmlFor="product-name" className="mb-1 block text-sm font-medium">Product Name</label>
+            <label htmlFor="product-name" className="mb-1 block text-sm text-base-content/70">Product Name</label>
             <input
               id="product-name"
               name="name"
@@ -85,7 +89,7 @@ export default function AddProductForm({ onAdd }) {
           </div>
 
           <div>
-            <label htmlFor="product-category" className="mb-1 block text-sm font-medium">Category</label>
+            <label htmlFor="product-category" className="mb-1 block text-sm text-base-content/70">Category</label>
             <select
               id="product-category"
               name="category"
@@ -100,7 +104,7 @@ export default function AddProductForm({ onAdd }) {
           </div>
 
           <div>
-            <label htmlFor="product-price" className="mb-1 block text-sm font-medium">Price (฿)</label>
+            <label htmlFor="product-price" className="mb-1 block text-sm text-base-content/70">Price (฿)</label>
             <input
               id="product-price"
               name="price"
@@ -117,7 +121,7 @@ export default function AddProductForm({ onAdd }) {
           </div>
 
           <div>
-            <label htmlFor="product-stock" className="mb-1 block text-sm font-medium">Stock</label>
+            <label htmlFor="product-stock" className="mb-1 block text-sm text-base-content/70">Stock</label>
             <input
               id="product-stock"
               name="stock"
@@ -136,9 +140,13 @@ export default function AddProductForm({ onAdd }) {
 
         <div className="flex flex-wrap items-center justify-end gap-3">
           {success && (
-            <span role="status" className="mr-auto text-sm text-success">✅ {success}</span>
+            <span role="status" className="mr-auto flex items-center gap-1.5 text-sm text-success">
+              <CircleCheck className="size-4" strokeWidth={1.8} />
+              {success}
+            </span>
           )}
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary rounded-full px-6 font-normal">
+            <Plus className="size-4" strokeWidth={2} />
             Add Product
           </button>
         </div>

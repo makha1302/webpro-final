@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Camera, CircleCheck, Package, UserRound } from 'lucide-react'
 import { useCart } from '../context/cartContext'
 import { sampleOrders, orderStatusClass } from '../data/dashboardData'
 import { loadJSON, saveJSON } from '../utils/storage'
@@ -66,59 +67,65 @@ export default function Profile() {
     src ? (
       <img src={src} alt="Profile" className={`${size} rounded-full object-cover`} />
     ) : (
-      <span className={`${size} grid place-items-center rounded-full bg-primary/10 text-3xl text-primary`} aria-hidden="true">
-        {profile.name.charAt(0).toUpperCase() || '👤'}
+      <span className={`${size} grid place-items-center rounded-full bg-primary/10 text-3xl font-light text-primary`} aria-hidden="true">
+        {profile.name.charAt(0).toUpperCase() || <UserRound className="size-1/2" strokeWidth={1.5} />}
       </span>
     )
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
-      <aside className="h-fit rounded-2xl bg-base-100 p-5 text-center shadow-sm">
+      <aside className="h-fit rounded-2xl bg-base-200 p-6 text-center">
         <div className="mx-auto w-fit">{avatar(profile.photo, 'size-20')}</div>
-        <p className="mt-3 font-bold">{profile.name}</p>
-        <p className="text-sm opacity-60">{profile.email}</p>
+        <p className="mt-3 font-medium">{profile.name}</p>
+        <p className="text-sm text-base-content/60">{profile.email}</p>
 
         <ul className="menu mt-4 w-full p-0 text-left">
-          <li><a href="#profile-info" className="menu-active">👤 Profile</a></li>
-          <li><a href="#orders">📦 Orders</a></li>
+          <li><a href="#profile-info" className="menu-active"><UserRound className="size-4" strokeWidth={1.7} /> Profile</a></li>
+          <li><a href="#orders"><Package className="size-4" strokeWidth={1.7} /> Orders</a></li>
         </ul>
       </aside>
 
       <div className="min-w-0 space-y-6">
-        <section id="profile-info" className="rounded-2xl bg-base-100 p-5 shadow-sm md:p-6">
-          <h1 className="text-2xl font-bold">Profile Information</h1>
+        <section id="profile-info" className="rounded-2xl border border-base-300/60 p-5 md:p-8">
+          <h1 className="text-2xl font-normal tracking-tight">Profile Information</h1>
 
           <form onSubmit={handleSubmit} noValidate className="mt-5 grid gap-6 md:grid-cols-[1fr_180px]">
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="mb-1 block text-sm font-medium">Full Name</label>
+                <label htmlFor="name" className="mb-1 block text-sm text-base-content/70">Full Name</label>
                 <input id="name" name="name" value={form.name} onChange={handleChange} className={`input w-full ${errors.name ? 'input-error' : ''}`} />
                 {errors.name && <p className="mt-1 text-xs text-error">{errors.name}</p>}
               </div>
               <div>
-                <label htmlFor="email" className="mb-1 block text-sm font-medium">Email Address</label>
+                <label htmlFor="email" className="mb-1 block text-sm text-base-content/70">Email Address</label>
                 <input id="email" name="email" type="email" value={form.email} onChange={handleChange} className={`input w-full ${errors.email ? 'input-error' : ''}`} />
                 {errors.email && <p className="mt-1 text-xs text-error">{errors.email}</p>}
               </div>
               <div>
-                <label htmlFor="phone" className="mb-1 block text-sm font-medium">Phone Number</label>
+                <label htmlFor="phone" className="mb-1 block text-sm text-base-content/70">Phone Number</label>
                 <input id="phone" name="phone" value={form.phone} onChange={handleChange} className={`input w-full ${errors.phone ? 'input-error' : ''}`} />
                 {errors.phone && <p className="mt-1 text-xs text-error">{errors.phone}</p>}
               </div>
               <div>
-                <label htmlFor="bio" className="mb-1 block text-sm font-medium">Bio</label>
-                <textarea id="bio" name="bio" rows="3" value={form.bio} onChange={handleChange} className="textarea w-full" />
+                <label htmlFor="bio" className="mb-1 block text-sm text-base-content/70">Bio</label>
+                <textarea id="bio" name="bio" rows="3" value={form.bio} onChange={handleChange} className="textarea w-full rounded-xl" />
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <button type="submit" className="btn btn-primary">Save Changes</button>
-                {saved && <span role="status" className="text-sm text-success">✅ บันทึกข้อมูลแล้ว</span>}
+                <button type="submit" className="btn btn-primary rounded-full px-6 font-normal">Save Changes</button>
+                {saved && (
+                  <span role="status" className="flex items-center gap-1.5 text-sm text-success">
+                    <CircleCheck className="size-4" strokeWidth={1.8} />
+                    บันทึกข้อมูลแล้ว
+                  </span>
+                )}
               </div>
             </div>
 
             <div className="order-first flex flex-col items-center gap-3 md:order-none">
               {avatar(form.photo, 'size-28')}
-              <label className="btn btn-outline btn-primary btn-sm">
+              <label className="btn btn-outline btn-primary btn-sm rounded-full font-normal">
+                <Camera className="size-4" strokeWidth={1.7} />
                 Change Photo
                 <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
               </label>
@@ -126,8 +133,8 @@ export default function Profile() {
           </form>
         </section>
 
-        <section id="orders" className="rounded-2xl bg-base-100 p-5 shadow-sm md:p-6">
-          <h2 className="text-xl font-bold">Recent Orders</h2>
+        <section id="orders" className="rounded-2xl border border-base-300/60 p-5 md:p-8">
+          <h2 className="text-xl font-normal tracking-tight">Recent Orders</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="table">
               <thead>
@@ -144,7 +151,7 @@ export default function Profile() {
                     <td className="font-medium text-primary">{order.id}</td>
                     <td>{order.date}</td>
                     <td>{formatUSD(order.total)}</td>
-                    <td><span className={`badge badge-sm ${orderStatusClass[order.status]}`}>{order.status}</span></td>
+                    <td><span className={`badge badge-soft badge-sm ${orderStatusClass[order.status]}`}>{order.status}</span></td>
                   </tr>
                 ))}
               </tbody>

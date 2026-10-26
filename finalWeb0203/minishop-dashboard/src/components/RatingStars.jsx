@@ -1,3 +1,5 @@
+import { Star } from 'lucide-react'
+
 // แสดงคะแนนรีวิว — rating เป็น Object จึงต้องอ่าน rating.rate และ rating.count
 export default function RatingStars({ rating, size = 'text-sm' }) {
   const rate = rating?.rate ?? 0
@@ -5,9 +7,9 @@ export default function RatingStars({ rating, size = 'text-sm' }) {
 
   return (
     <div className={`flex items-center gap-1 ${size}`}>
-      <span className="text-warning" aria-hidden="true">★</span>
+      <Star className="size-3.5 fill-accent text-accent" aria-hidden="true" />
       <span className="font-medium">{rate.toFixed(1)}</span>
-      <span className="opacity-60">({count} reviews)</span>
+      <span className="text-base-content/50">({count} reviews)</span>
     </div>
   )
 }

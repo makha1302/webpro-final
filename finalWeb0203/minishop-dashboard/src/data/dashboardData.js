@@ -21,5 +21,5 @@ export const orderStatusClass = {
   Delivered: 'badge-success',
   Processing: 'badge-warning',
   Shipped: 'badge-info',
-  Pending: 'badge-ghost'
+  Pending: 'badge-neutral'
 }

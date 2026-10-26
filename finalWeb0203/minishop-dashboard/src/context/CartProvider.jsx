@@ -45,7 +45,6 @@ export default function CartProvider({ children }) {
           title: product.title,
           price: product.price,
           image: product.image,
-          icon: product.icon,
           category: product.category,
           quantity
         }

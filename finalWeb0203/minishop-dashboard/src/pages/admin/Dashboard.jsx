@@ -5,7 +5,8 @@ import SummaryCards from '../../components/SummaryCards'
 import SalesChart from '../../components/SalesChart'
 import StockBadge from '../../components/StockBadge'
 import { weeklySales, sampleOrders, orderStatusClass } from '../../data/dashboardData'
-import { categoryIcons } from '../../data/mockProducts'
+import CategoryIcon from '../../components/CategoryIcon'
+import { ArrowRight } from 'lucide-react'
 import { formatTHB, formatUSD } from '../../utils/format'
 
 export default function Dashboard() {
@@ -26,29 +27,29 @@ export default function Dashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="mt-1 opacity-70">ภาพรวมสินค้าและยอดขายของ MiniShop</p>
+          <h1 className="text-3xl font-normal tracking-tight">Dashboard</h1>
+          <p className="mt-1 text-base-content/60">ภาพรวมสินค้าและยอดขายของ MiniShop</p>
         </div>
-        <p className="text-sm opacity-60">Today, {today}</p>
+        <p className="text-sm text-base-content/50">Today, {today}</p>
       </div>
 
       {/* ส่วนสรุปข้อมูลด้านบน (ข้อ 2.3) */}
       <SummaryCards products={products} />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.4fr_1fr]">
-        <section className="card min-w-0 bg-base-100 shadow-sm">
+        <section className="card min-w-0 rounded-2xl border border-base-300/60 bg-base-100">
           <div className="card-body">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="card-title">Sales Overview</h2>
-              <span className="badge badge-ghost">This Week · {formatUSD(weekTotal)}</span>
+              <h2 className="card-title text-base font-medium">Sales Overview</h2>
+              <span className="badge badge-soft badge-primary">This Week · {formatUSD(weekTotal)}</span>
             </div>
             <SalesChart data={weeklySales} />
           </div>
         </section>
 
-        <section className="card min-w-0 bg-base-100 shadow-sm">
+        <section className="card min-w-0 rounded-2xl border border-base-300/60 bg-base-100">
           <div className="card-body">
-            <h2 className="card-title">Recent Orders</h2>
+            <h2 className="card-title text-base font-medium">Recent Orders</h2>
             <div className="overflow-x-auto">
               <table className="table table-sm">
                 <thead>
@@ -65,7 +66,7 @@ export default function Dashboard() {
                       <td className="font-medium text-primary">{order.id}</td>
                       <td className="whitespace-nowrap">{order.customer || 'Makha'}</td>
                       <td>{formatUSD(order.total)}</td>
-                      <td><span className={`badge badge-sm ${orderStatusClass[order.status]}`}>{order.status}</span></td>
+                      <td><span className={`badge badge-soft badge-sm ${orderStatusClass[order.status]}`}>{order.status}</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -75,24 +76,26 @@ export default function Dashboard() {
         </section>
       </div>
 
-      <section className="card bg-base-100 shadow-sm">
+      <section className="card rounded-2xl border border-base-300/60 bg-base-100">
         <div className="card-body">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="card-title">Top Products by Stock Value</h2>
-            <Link to="/admin/products" className="link link-primary text-sm">Manage →</Link>
+            <h2 className="card-title text-base font-medium">Top Products by Stock Value</h2>
+            <Link to="/admin/products" className="flex items-center gap-1 text-sm text-primary hover:underline">
+              Manage <ArrowRight className="size-4" strokeWidth={1.8} />
+            </Link>
           </div>
 
           {topProducts.length === 0 ? (
-            <p className="opacity-70">ยังไม่มีสินค้าในระบบ</p>
+            <p className="text-base-content/60">ยังไม่มีสินค้าในระบบ</p>
           ) : (
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {topProducts.map(product => (
                 <li key={product.id} className="flex items-center gap-3 rounded-xl bg-base-200 p-3">
-                  <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-base-100 text-2xl" aria-hidden="true">
-                    {categoryIcons[product.category] || '📦'}
+                  <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                    <CategoryIcon category={product.category} />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold">{product.name}</p>
+                    <p className="truncate text-sm font-medium">{product.name}</p>
                     <p className="text-sm text-primary">{formatTHB(product.price * product.stock)}</p>
                     <StockBadge stock={product.stock} />
                   </div>

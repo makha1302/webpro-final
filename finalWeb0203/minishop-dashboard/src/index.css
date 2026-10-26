@@ -1,26 +1,89 @@
+@import "@fontsource/dm-sans/300.css";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/500.css";
+@import "@fontsource/dm-sans/600.css";
+@import "@fontsource/noto-sans-thai/300.css";
+@import "@fontsource/noto-sans-thai/400.css";
+@import "@fontsource/noto-sans-thai/500.css";
+@import "@fontsource/noto-sans-thai/600.css";
 @import "tailwindcss";
+
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark;
 }
 
-/* ปรับสีหลักของ Theme light / dark ให้เป็นโทนม่วงคราม (Indigo) ตาม Mockup */
+/* Theme สว่าง: พื้นขาว สีหลักเขียว Sage สีเน้นเหลืองมัสตาร์ด */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  --color-primary: oklch(51% 0.23 277);
-  --color-primary-content: oklch(98% 0.01 277);
+  color-scheme: light;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f6f5f1;
+  --color-base-300: #e6e3da;
+  --color-base-content: #24302d;
+
+  --color-primary: #6b8f86;
+  --color-primary-content: #ffffff;
+  --color-secondary: #a8bfb8;
+  --color-secondary-content: #24302d;
+  --color-accent: #e4c45c;
+  --color-accent-content: #24302d;
+  --color-neutral: #33443f;
+  --color-neutral-content: #f1f3f0;
+
+  --color-info: #6c9bc4;
+  --color-success: #5e9c76;
+  --color-warning: #d9a93a;
+  --color-error: #c8645a;
+
+  --radius-box: 1rem;
+  --radius-field: 0.6rem;
+  --radius-selector: 2rem;
+  --depth: 0;
+  --noise: 0;
 }
 
+/* Theme มืด: โทนเขียวเข้ม ใช้สีหลักชุดเดียวกันแต่สว่างขึ้นเล็กน้อย */
 @plugin "daisyui/theme" {
   name: "dark";
   prefersdark: true;
-  --color-primary: oklch(65% 0.2 277);
-  --color-primary-content: oklch(98% 0.01 277);
+  color-scheme: dark;
+
+  --color-base-100: #1c2422;
+  --color-base-200: #151b19;
+  --color-base-300: #2c3633;
+  --color-base-content: #e6ebe8;
+
+  --color-primary: #8db3a9;
+  --color-primary-content: #142420;
+  --color-secondary: #4f6862;
+  --color-secondary-content: #e6ebe8;
+  --color-accent: #e4c45c;
+  --color-accent-content: #24302d;
+  --color-neutral: #101614;
+  --color-neutral-content: #dfe5e2;
+
+  --color-info: #7fa9cf;
+  --color-success: #79b48f;
+  --color-warning: #e2b650;
+  --color-error: #db7a70;
+
+  --radius-box: 1rem;
+  --radius-field: 0.6rem;
+  --radius-selector: 2rem;
+  --depth: 0;
+  --noise: 0;
 }
 
-/* Animation สำหรับเปลี่ยนหน้าและแสดงการ์ด */
+/* dark: ของ Tailwind ให้ทำงานตาม data-theme ของ DaisyUI */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
-  --animate-fade-up: fade-up 0.4s ease-out both;
+  --font-sans: "DM Sans", "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
+
+  /* Animation สำหรับเปลี่ยนหน้าและแสดงการ์ด */
+  --animate-fade-up: fade-up 0.45s ease-out both;
 
   @keyframes fade-up {
     from {

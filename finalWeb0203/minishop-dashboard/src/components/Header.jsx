@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { useCart } from '../context/cartContext'
 import ThemeToggle from './ThemeToggle'
-import { CartIcon, CloseIcon, MenuIcon, SearchIcon, UserIcon } from './Icons'
+import Logo from './Logo'
 
 const links = [
   { to: '/', label: 'Home' },
@@ -25,15 +26,23 @@ export default function Header() {
     setMenuOpen(false)
   }
 
+  // หน้าปัจจุบันแสดงเส้นใต้สีมัสตาร์ด
   const linkClass = ({ isActive }) =>
-    `rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-      isActive ? 'bg-primary text-primary-content' : 'hover:bg-base-200'
+    `relative py-2 text-[15px] transition-colors duration-200 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-accent after:transition-transform after:duration-300 ${
+      isActive
+        ? 'font-medium text-base-content after:scale-x-100'
+        : 'text-base-content/70 after:scale-x-0 hover:text-base-content'
+    }`
+
+  const mobileLinkClass = ({ isActive }) =>
+    `rounded-lg px-3 py-2.5 transition-colors ${
+      isActive ? 'bg-base-200 font-medium' : 'hover:bg-base-200'
     }`
 
   const searchForm = (
     <form onSubmit={handleSearch} role="search" className="w-full">
-      <label className="input input-sm w-full">
-        <SearchIcon className="size-4 opacity-50" />
+      <label className="input input-sm h-9 w-full rounded-full bg-base-200 border-transparent focus-within:border-base-300">
+        <Search className="size-4 opacity-50" />
         <input
           type="search"
           value={keyword}
@@ -46,14 +55,11 @@ export default function Header() {
   )
 
   return (
-    <header className="sticky top-0 z-30 border-b border-base-300 bg-base-100/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 text-xl font-bold" onClick={() => setMenuOpen(false)}>
-          <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-content">M</span>
-          MiniShop
-        </Link>
+    <header className="sticky top-0 z-30 border-b border-base-300/70 bg-base-100/90 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-8 px-4 sm:px-6">
+        <Logo onClick={() => setMenuOpen(false)} />
 
-        <nav aria-label="Main navigation" className="ml-4 hidden gap-1 md:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-7 md:flex">
           {links.map(link => (
             <NavLink key={link.to} to={link.to} end={link.to === '/'} className={linkClass}>
               {link.label}
@@ -61,22 +67,22 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="ml-auto hidden w-56 lg:block">{searchForm}</div>
+        <div className="ml-auto hidden w-60 lg:block">{searchForm}</div>
 
         <div className="ml-auto flex items-center gap-1 lg:ml-0">
           <ThemeToggle />
 
           <Link to="/cart" className="btn btn-ghost btn-sm btn-circle relative" aria-label={`Cart (${cartCount} items)`}>
-            <CartIcon />
+            <ShoppingBag className="size-[18px]" strokeWidth={1.8} />
             {cartCount > 0 && (
-              <span className="badge badge-primary badge-xs absolute -right-1 -top-1 h-4 min-w-4 px-1">
+              <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-accent px-1 text-[10px] font-semibold text-accent-content">
                 {cartCount}
               </span>
             )}
           </Link>
 
           <Link to="/profile" className="btn btn-ghost btn-sm btn-circle" aria-label="Profile">
-            <UserIcon />
+            <User className="size-[18px]" strokeWidth={1.8} />
           </Link>
 
           <button
@@ -86,21 +92,21 @@ export default function Header() {
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
           >
-            {menuOpen ? <CloseIcon className="size-5" /> : <MenuIcon className="size-5" />}
+            {menuOpen ? <X className="size-5" strokeWidth={1.8} /> : <Menu className="size-5" strokeWidth={1.8} />}
           </button>
         </div>
       </div>
 
       {/* เมนูสำหรับมือถือ */}
       {menuOpen && (
-        <div className="animate-fade-up border-t border-base-300 px-4 pb-4 md:hidden">
+        <div className="animate-fade-up border-t border-base-300/70 px-4 pb-4 md:hidden">
           <nav aria-label="Mobile navigation" className="flex flex-col gap-1 py-3">
             {links.map(link => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 end={link.to === '/'}
-                className={linkClass}
+                className={mobileLinkClass}
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}

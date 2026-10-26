@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { RotateCcw, TriangleAlert } from 'lucide-react'
 import { useInventory } from '../../context/inventoryContext'
 import SummaryCards from '../../components/SummaryCards'
 import AddProductForm from '../../components/AddProductForm'
@@ -30,7 +31,7 @@ export default function ManageProducts() {
 
   return (
     <div className="space-y-6">
-      <div className="breadcrumbs text-sm">
+      <div className="breadcrumbs text-sm text-base-content/60">
         <ul>
           <li>Admin</li>
           <li>Products</li>
@@ -39,11 +40,12 @@ export default function ManageProducts() {
 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Product Management</h1>
-          <p className="mt-1 opacity-70">เพิ่ม ค้นหา และลบสินค้าในคลัง</p>
+          <h1 className="text-3xl font-normal tracking-tight">Product Management</h1>
+          <p className="mt-1 text-base-content/60">เพิ่ม ค้นหา และลบสินค้าในคลัง</p>
         </div>
-        <button type="button" className="btn btn-ghost btn-sm" onClick={resetProducts}>
-          ↺ Reset data
+        <button type="button" className="btn btn-ghost btn-sm font-normal" onClick={resetProducts}>
+          <RotateCcw className="size-4" strokeWidth={1.7} />
+          Reset data
         </button>
       </div>
 
@@ -52,7 +54,7 @@ export default function ManageProducts() {
       <AddProductForm onAdd={addProduct} />
 
       <section className="space-y-4">
-        <div className="rounded-box bg-base-100 p-4 shadow-sm">
+        <div className="rounded-2xl border border-base-300/60 bg-base-100 p-5">
           <SearchFilterBar
             search={search}
             onSearchChange={setSearch}
@@ -62,7 +64,7 @@ export default function ManageProducts() {
           />
         </div>
 
-        <p className="text-sm opacity-70">
+        <p className="text-sm text-base-content/60">
           Showing {filteredProducts.length} of {products.length} products
         </p>
 
@@ -83,12 +85,15 @@ export default function ManageProducts() {
       {/* Modal ยืนยันก่อนลบ */}
       {pendingDelete && (
         <div className="modal modal-open" role="dialog" aria-labelledby="delete-title">
-          <div className="modal-box">
-            <h3 id="delete-title" className="text-lg font-bold">ยืนยันการลบสินค้า</h3>
-            <p className="py-4">ต้องการลบ "{pendingDelete.name}" ใช่หรือไม่?</p>
-            <div className="modal-action">
-              <button type="button" className="btn" onClick={() => setPendingDelete(null)}>Cancel</button>
-              <button type="button" className="btn btn-error" onClick={confirmDelete}>Delete</button>
+          <div className="modal-box max-w-sm text-center">
+            <span className="mx-auto grid size-12 place-items-center rounded-full bg-error/10 text-error">
+              <TriangleAlert className="size-6" strokeWidth={1.7} />
+            </span>
+            <h3 id="delete-title" className="mt-4 text-lg font-medium">ยืนยันการลบสินค้า</h3>
+            <p className="py-2 text-base-content/70">ต้องการลบ "{pendingDelete.name}" ใช่หรือไม่?</p>
+            <div className="modal-action justify-center">
+              <button type="button" className="btn btn-ghost rounded-full px-6 font-normal" onClick={() => setPendingDelete(null)}>Cancel</button>
+              <button type="button" className="btn btn-error rounded-full px-6 font-normal" onClick={confirmDelete}>Delete</button>
             </div>
           </div>
           <div className="modal-backdrop" onClick={() => setPendingDelete(null)} />

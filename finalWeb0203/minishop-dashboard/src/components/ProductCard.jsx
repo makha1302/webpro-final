@@ -9,29 +9,31 @@ export default function ProductCard({ product }) {
   const { addToCart } = useCart()
 
   return (
-    <article className="group card bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <Link to={`/products/${product.id}`} className="block p-3 pb-0">
+    <article className="group flex flex-col rounded-2xl border border-base-300/60 bg-base-100 p-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_30px_-12px_rgb(0_0_0/0.15)]">
+      <Link to={`/products/${product.id}`} className="block">
         <ProductImage product={product} />
       </Link>
 
-      <div className="card-body gap-2 p-4">
-        <span className="badge badge-ghost badge-sm">{capitalize(product.category)}</span>
+      <div className="flex flex-1 flex-col gap-1.5 px-2 pb-2 pt-4">
+        <p className="text-xs uppercase tracking-wider text-base-content/50">{capitalize(product.category)}</p>
 
-        <h3 className="line-clamp-2 min-h-10 text-sm font-semibold">
-          <Link to={`/products/${product.id}`} className="hover:text-primary">
+        <h3 className="line-clamp-2 min-h-12 leading-snug">
+          <Link to={`/products/${product.id}`} className="transition-colors hover:text-primary">
             {product.title}
           </Link>
         </h3>
 
-        <p className="text-lg font-bold text-primary">{formatUSD(product.price)}</p>
-        <RatingStars rating={product.rating} size="text-xs" />
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-lg font-semibold text-primary">{formatUSD(product.price)}</p>
+          <RatingStars rating={product.rating} size="text-xs" />
+        </div>
 
         <button
           type="button"
           onClick={() => addToCart(product)}
-          className="btn btn-primary btn-sm mt-2"
+          className="btn btn-primary btn-sm mt-3 rounded-full font-normal"
         >
-          Add to Cart
+          Add to cart
         </button>
       </div>
     </article>

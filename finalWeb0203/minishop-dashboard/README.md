@@ -5,6 +5,8 @@
 เว็บแอปพลิเคชันสำหรับแสดงรายการสินค้า เพิ่มสินค้า ค้นหา และจัดการข้อมูลสินค้า
 พัฒนาด้วย **React 19 + Vite 6 + Tailwind CSS v4 + DaisyUI 5 + React Router v6**
 
+ดีไซน์แบบ Minimal โทนสีเขียว Sage + เหลืองมัสตาร์ด ไอคอนจาก [Lucide](https://lucide.dev) ฟอนต์ DM Sans + Noto Sans Thai (ติดตั้งผ่าน npm ไม่ต้องโหลดจากเน็ต)
+
 ## วิธีรัน
 
 ต้องใช้ Node.js 18 ขึ้นไป (ทดสอบแล้วบน Node 20.11.1 และ 22)
@@ -16,13 +18,14 @@ npm run dev      # เปิด http://localhost:5173
 ```
 
 ไม่ต้องรัน API Server เอง เพราะหน้าร้านดึงข้อมูลจาก https://fakestoreapi.com/products โดยตรง
+รูปแบนเนอร์หน้า Home โหลดจาก Unsplash (ถ้าออฟไลน์จะเห็นเป็นพื้นสีเขียวเข้มแทน)
 
 ## หน้าเว็บ (Routes)
 
 | Path | หน้า | ข้อมูล |
 | --- | --- | --- |
 | `/` | Home: Banner, Featured Products, หมวดหมู่, Add to Cart | Fake Store API |
-| `/products` | รายการสินค้าทั้งหมด + ค้นหา + กรองหมวดหมู่ | Fake Store API |
+| `/products` | รายการสินค้าทั้งหมด + ค้นหา + กรองหมวดหมู่ + เรียงลำดับ | Fake Store API |
 | `/products/:id` | Product Detail: รูป รายละเอียด ราคา คะแนนรีวิว จำนวน Add to Cart | Fake Store API |
 | `/cart` | Shopping Cart: ปรับจำนวน ลบสินค้า สรุปราคา Checkout | React Context + localStorage |
 | `/profile` | Profile: ฟอร์มแก้ไขโปรไฟล์ เปลี่ยนรูป ประวัติคำสั่งซื้อ | localStorage |
@@ -47,7 +50,7 @@ npm run dev      # เปิด http://localhost:5173
 | 4.2 | Loading products... / Error (แสดงข้อความ + ปุ่ม Retry + ใช้ Mock Data แทน) / Success | `src/hooks/useStoreProducts.js`, `src/components/StatusMessage.jsx` |
 | 4.3 | ปุ่ม Delete (มี Modal ยืนยัน) ลบผ่าน React State ข้อมูลสรุปอัปเดตทันที | `src/context/InventoryProvider.jsx`, `src/pages/admin/ManageProducts.jsx` |
 | 5.1 | React Router: `/`, `/products`, `/about` และหน้าอื่น ๆ ใช้ `NavLink` / `Link` | `src/App.jsx`, `src/main.jsx` |
-| 5.2 | สีและตัวอักษร, Hover Effect, Transition / Animation, ข้อความเมื่อไม่พบสินค้า, Label ทุกช่องกรอก, ระยะห่างสม่ำเสมอ, รองรับมือถือ, Dark Mode | ทุกหน้า, `src/index.css`, `src/components/ThemeToggle.jsx` |
+| 5.2 | สีและตัวอักษร (Theme Sage/Mustard + DM Sans), Hover Effect, Transition / Animation, ข้อความเมื่อไม่พบสินค้า, Label ทุกช่องกรอก, ระยะห่างสม่ำเสมอ, รองรับมือถือ, Dark Mode | ทุกหน้า, `src/index.css`, `src/components/ThemeToggle.jsx` |
 
 > **หมายเหตุเรื่องข้อมูล:** Fake Store API ไม่มีฟิลด์ `stock` และหมวดหมู่ไม่ตรงกับข้อ 3.2
 > จึงแบ่งเป็น 2 ส่วน คือหน้าร้าน (Home / Products / Detail / Cart) ใช้ **Fake Store API**

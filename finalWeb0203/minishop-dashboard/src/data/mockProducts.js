@@ -40,8 +40,3 @@ export const mockProducts = [
 // หมวดหมู่สำหรับ Dropdown ข้อ 3.2 และฟอร์มเพิ่มสินค้าข้อ 3.3
 export const inventoryCategories = ['Accessories', 'Display', 'Camera']
 
-export const categoryIcons = {
-  Accessories: '⌨️',
-  Display: '🖥️',
-  Camera: '📷'
-}
